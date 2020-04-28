@@ -1,7 +1,9 @@
 #ifndef TTMATHENGINE_HPP
 #define TTMATHENGINE_HPP
 
+#include <iostream>
 #include <string>
+#include <cmath>
 
 #include "../src/charhelper.cpp"
 
@@ -64,11 +66,11 @@ namespace TTMathEngine {
 			
 			//From here is non-operator functions
 			float Vector3::dot(Vector3 v);
-			float Vector3::magnitutde();
+			float Vector3::magnitude();
 			
 			Vector3 Vector3::cross(Vector3 v);
 			
-			
+			void Vector3::normalize();
 			
 			char* Vector3::toString();
 	};
@@ -80,13 +82,7 @@ namespace TTMathEngine {
 
 
 //TODO: General Functions
-	double squareroot(double x);
-	double squareroot(float x);
-	double squareroot(int x);
-
-	float inverseSquareroot(double x);
-	float inverseSquareroot(float x);
-	float inverseSquareroot(int x);
+	Vector3 VectorNormal(Vector3);
 }
 
 #endif

@@ -1,63 +1,62 @@
 #include <iostream>
 #include <cassert>
+
 #include "ttmathengine.hpp"
+using namespace TTMathEngine;
 
 int main(int argc, const char * argv[]) {
-	TTMathEngine::Vector3 v1(0,0,0);
-	TTMathEngine::Vector3 v2(v1);	
-	TTMathEngine::Vector3 v3(2,5,4);
+	//Vector Tests
+	std::cout << "*****Begin Vector Testing\n******";
+	std::cout << "Creating 3 dimensional vectors (if this goes wrong hoo boy)\n";
 
-	TTMathEngine::Vector3 v4(3,4,5);
+	Vector3 *zero = new Vector3(0, 0, 0);
+	Vector3 *vector1 = new Vector3(1, 2, 3);
+	Vector3 *vector2 = new Vector3(2, 2, 2);
+	Vector3 *doubleVector2 = new Vector3(4, 4, 4);
+	Vector3* vector3 = new Vector3(*zero);
+	Vector3 *crossVector = new Vector3(-2, 4, -2);
 
-	TTMathEngine::Vector3 scalarVec(3,6,9);
-	TTMathEngine::Vector3 scaleResultDiv(1,2,3);
-	TTMathEngine::Vector3 scaleResultMulti(3,6,9);
+	float scalar = 2.0f;
+	float magnitudeVerification = std::sqrt(12.0f);
+	float dot = 12.0f;
 
-	TTMathEngine::Vector3 dotVect(1,2,0);
-	TTMathEngine::Vector3 crossVect(2,3,1);
+	std::cout << "Testing arithmatic, assignment and equivalence operators\n";
+	*vector3 += *vector1;
+	assert(*zero + *vector1 == *vector1);
+	assert(*zero != *vector1);
+	assert(*vector3 == *vector1);
+	assert(*vector3 - *vector1 == *zero);
 
-	float scalar = 3;
+	*vector3 -= *vector1;
+	assert(*vector3 == *zero);
 
-	assert(v1 == v2);
-	std::cout << "v1 equals v2 constructed from v1\n";
-	assert(v3 != v1);
-	std::cout << "v3 does not equal v1\n";
-	assert(v3 != v2);
-	std::cout << "v3 does not equal v2\n";
+	vector3 = vector2;
+	assert(*vector3 == *vector2);
 
-	v3 = v2;
-	assert(v3 == v1);
-	std::cout << "v3 reassigned to v2 equals v1\n";
+	std::cout << "Testing Vector math, normals, cross products, dot products, scalars, magnitude\n";
+	assert(*vector2 * scalar == *doubleVector2);
+	assert(*doubleVector2 / scalar == *vector2);
 
-	assert(v2 + v4 == v4);
-	std::cout << "v2 added to v4 equals v4 with the + operator\n";
+	*vector2 *= scalar;
+	assert(*vector2 == *doubleVector2);
+
+	*vector2 /= scalar;
+	assert(*doubleVector2 / scalar == *vector2);
 	
-	v1+=v4;
-	assert(v1 == v4);
-	std::cout << "v1 added to v4 equals v4 with the += operator\n";
+	assert((*vector1) * (*vector2) == dot);
+	assert(vector1->dot(*vector2) == dot);
+	
+	assert(*vector1 % *vector2 == *crossVector);
+	assert(vector1->cross(*vector2) == *crossVector);
 
-	assert(v1 - v4 == v2);
-	std::cout << "v4 subtracted from v1 equals v2 with the - operator\n";
-	
-	v1-=v4;
-	assert(v1 == v2);
-	std::cout << "v4 subtracted from v1 equals v2 with the -= operator\n";
-	
-	assert(scalarVec/scalar == scaleResultDiv);
-	std::cout << "Division without assignment works appropriately\n";
-	
-	scalarVec/=scalar;
-	assert(scalarVec == scaleResultDiv);
-	std::cout << "Division with assignment works appropriately\n";
-	
-	assert(scalarVec * scalar == scaleResultMulti);
-	std::cout << "Multiplication without assignment works appropriately\n";
-	
-	scalarVec*=scalar;
-	assert(scalarVec == scaleResultMulti);
-	std::cout << "Multiplication with assignment works appropriately\n";
-	
-	std::cout << crossVect.cross(dotVect).toString();
+	float mag = vector2->magnitude();
+	assert(mag == magnitudeVerification);
+
+	Vector3 vecNormal = VectorNormal(*vector1);
+	vector1->normalize();
+	assert(vecNormal == *vector1);
+	std::cout << "vector1's normal evaluated to: " << vector1->toString() << std::endl;
+
 
 	return 0;
 }

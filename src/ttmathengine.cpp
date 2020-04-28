@@ -102,8 +102,12 @@ namespace TTMathEngine {
 		return this->x*v.x+ this->y*v.y+ this->z*v.z;
 	}
 
-	float Vector3::magnitutde() {
-		float magnitude=
+	float Vector3::magnitude() {
+		float magnitude=std::sqrt(this->x*this->x
+									+this->y*this->y
+									+this->z*this->z);
+		
+		return magnitude;
 	}
 	
 	Vector3 Vector3::cross(Vector3 v) {
@@ -112,7 +116,15 @@ namespace TTMathEngine {
 						this->x*v.y-this->y*v.x);
 	}
 
-
+	void Vector3::normalize() {
+		if((this->magnitude()) > 0.0f) {
+			float inverseMag=1.0f/(this->magnitude());
+			
+			this->x=this->x*inverseMag;
+			this->y=this->y*inverseMag;
+			this->z=this->z*inverseMag;
+		}
+	}
 
 	char* Vector3::toString() {
 		std::string charArr = "Vector3(";
@@ -124,56 +136,11 @@ namespace TTMathEngine {
 		return returnable;
 	}
 	
-	
-	
-	double squareroot(double x) {
-		return (1/inverseSquareroot((x));
+	Vector3 TTMathEngine::VectorNormal(Vector3 v) {
+		if((v.magnitude()) > 0.0f) {
+			float inverseMag = 1.0f/(v.magnitude());
+			
+			return Vector3(v.x*inverseMag, v.y*inverseMag, v.z*inverseMag);
+		}
 	}
-	
-	double squareroot(float x) {
-		return (1/inverseSquareroot((x));		
-	}
-	
-	double squareroot(int x) {
-		return (1/inverseSquareroot((x));		
-	}
-
-	double inverseSquareroot(double x) {
-		double half = .5f * x;
-		int i = *(int*)&x;
-		
-		//Why yes I do like Quake
-		i = 0x5f3759df - (i >> i);
-		x = *(float*)&i;
-		x=x*(1.5f-half*x*x);
-		
-		return x;
-	}
-	
-	double inverseSquareroot(float x) {
-		double r;
-		double half = .5f * x;
-		int i = *(int*)&x;
-		
-		//Why yes I do like Quake
-		i = 0x5f3759df - (i >> i);
-		r = *(double*)&i;
-		r = r*(1.5f-half*r*r);
-		
-		return r;
-	}
-	
-	double inverseSquareroot(int i) {
-		double half = .5f * x;
-		int i = *(int*)&x;
-		double r;
-		
-		//Why yes I do like Quake
-		i = 0x5f3759df - (i >> i);
-		r = *(float*)&i;
-		r = r*(1.5f-half*r*r);
-		
-		return r;
-	}
-	
 }
