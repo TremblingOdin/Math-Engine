@@ -7,7 +7,7 @@
 
 #include "../src/charhelper.cpp"
 
-namespace TTMathEngine {
+namespace ttmathengine {
 //TODO: Vectors
 	class Vector3 {
 		private:
@@ -21,10 +21,10 @@ namespace TTMathEngine {
 			
 			
 			//Constructors and Deconstructors
-			Vector3();
-			Vector3(float iX, float iY, float iZ);
+			Vector3::Vector3();
+			Vector3::Vector3(float iX, float iY, float iZ);
 			
-			~Vector3();
+			Vector3::~Vector3();
 			
 			
 			//Copy constructors
@@ -72,11 +72,34 @@ namespace TTMathEngine {
 			
 			void Vector3::normalize();
 			
-			char* Vector3::toString();
+			char* Vector3::ToString();
 	};
 
 //TODO: Matricies
+	class Matrix {
+		private:
+			float matrix_data[9] = { 0.0 };
 
+		public:
+
+			Matrix::Matrix();
+			Matrix::Matrix(float, float, float, float, float, float, float, float, float);
+			Matrix::Matrix(float*);
+			Matrix::Matrix(float**);
+			Matrix::Matrix(float*, float*, float*);
+			
+			//Copy Constructors
+			Matrix::Matrix(const Matrix&);
+			Matrix& Matrix::operator=(const Matrix&)const;
+
+			Matrix::~Matrix();
+
+			float* Matrix::GetMatrixData();
+
+			//Two display functions
+			void Matrix::Show();
+			char* Matrix::ToString();
+	};
 
 //TODO: Quaternions
 

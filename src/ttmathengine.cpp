@@ -1,6 +1,7 @@
 #include "ttmathengine.hpp"
 
-namespace TTMathEngine {
+namespace ttmathengine {
+	//Vector functions
 	Vector3::Vector3():x(0.0),y(0.0),z(0.0){}
 	Vector3::Vector3(float iX, float iY, float iZ):x(iX), y(iY), z(iZ){}
 
@@ -126,7 +127,7 @@ namespace TTMathEngine {
 		}
 	}
 
-	char* Vector3::toString() {
+	char* Vector3::ToString() {
 		std::string charArr = "Vector3(";
 		charArr = charArr + std::to_string(this->x) + ", "
 				+ std::to_string(this->y) + ", "
@@ -136,7 +137,91 @@ namespace TTMathEngine {
 		return returnable;
 	}
 	
-	Vector3 TTMathEngine::VectorNormal(Vector3 v) {
+	//Matrix functions
+	/*The matrix function
+		0	3	6
+		1	4	7
+		2	5	8
+	*/
+	Matrix::Matrix() {
+		for (int i = 0; i < 9; i++) {
+			this->matrix_data[i] = 0.0f;
+		}
+
+		this->matrix_data[0] = this->matrix_data[4] = this->matrix_data[8] = 1.0f;
+	}
+
+	Matrix::Matrix(float f0, float f3, float f6, float f1, 
+		float f4, float f7, float f2, float f5, float f8) {
+		matrix_data[0] = f0;
+		matrix_data[1] = f3;
+		matrix_data[2] = f6;
+		matrix_data[3] = f1;
+		matrix_data[4] = f4;
+		matrix_data[5] = f7;
+		matrix_data[6] = f2;
+		matrix_data[7] = f5;
+		matrix_data[8] = f8;
+	}
+
+	/**
+	* This assumes that dataArr is properly formatted
+	*/
+	Matrix::Matrix(float* dataArr) {
+		for (int i = 0; i < 9; i++) {
+			this->matrix_data[i] = dataArr[i];
+		}
+	}
+
+	/**
+	* This reads each array in the 2DArray as a column in the matrix
+	*/
+	Matrix::Matrix(float** dataArr2D) {
+		int matDIndex = 0;
+		
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
+				this->matrix_data[matDIndex++] = dataArr2D[j][i];
+			}
+		}
+	}
+
+	Matrix::Matrix(float* data1, float* data2, float* data3) {
+		int matDIndex = 0;
+
+		for (int i = 0; i < 3; i++) {
+			this->matrix_data[matDIndex] = data1[i];
+			this->matrix_data[matDIndex] = data2[i];
+			this->matrix_data[matDIndex] = data3[i];
+			matDIndex++;
+		}
+	}
+
+	//Matrix functions
+	float* Matrix::GetMatrixData() {
+		return matrix_data;
+	}
+
+	//Display functions
+	void Matrix::Show() {
+		std::cout << "\n[" << matrix_data[0] << ",\t" << matrix_data[3] << ",\t" << matrix_data[6] << std::endl;
+		std::cout << matrix_data[1] << ",\t" << matrix_data[4] << ",\t" << matrix_data[7] << std::endl;
+		std::cout << matrix_data[2] << ",\t" << matrix_data[5] << ",\t" << matrix_data[8] << "]" << std::endl;
+	}
+
+	char* Matrix::ToString() {
+		std::string charArr = "Matrix(";
+		charArr = charArr + "(" + std::to_string(matrix_data[0]) + ","
+			+ std::to_string(matrix_data[3]) + "," + std::to_string(matrix_data[6]) + "),("
+			+ std::to_string(matrix_data[1]) + "," + std::to_string(matrix_data[4])
+			+ "," + std::to_string(matrix_data[7]) + "),(" + std::to_string(matrix_data[2]) + ","
+			+ std::to_string(matrix_data[5]) + "," + std::to_string(matrix_data[8]) + "))";
+
+		return charhelper::unconstchar(charArr.c_str());
+	}
+
+	//General Namespace functions
+	Vector3 ttmathengine::VectorNormal(Vector3 v) {
 		if((v.magnitude()) > 0.0f) {
 			float inverseMag = 1.0f/(v.magnitude());
 			
