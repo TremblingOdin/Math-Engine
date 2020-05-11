@@ -65,34 +65,37 @@ namespace ttmathengine {
 	}
 	
 	//Algebraic
-	Vector3 Vector3::operator+(const Vector3& v)const {
-		return Vector3(this->x+v.x,this->y+v.y,this->z+v.z);
+	Vector3* Vector3::operator+(const Vector3& v)const {
+		return new Vector3(this->x+v.x,this->y+v.y,this->z+v.z);
 	}
 	
-	Vector3 Vector3::operator-(const Vector3& v)const {
-		return Vector3(this->x-v.x,this->y-v.y,this->z-v.z);
+	Vector3* Vector3::operator-(const Vector3& v)const {
+		return new Vector3(this->x-v.x,this->y-v.y,this->z-v.z);
 	}
 	
 	//Cross product
-	Vector3 Vector3::operator%(const Vector3& v)const {
-		return Vector3(this->y*v.z-this->z*v.y,
+	Vector3* Vector3::operator%(const Vector3& v)const {
+		return new Vector3(this->y*v.z-this->z*v.y,
 						this->z*v.x-this->x*v.z,
 						this->x*v.y-this->y*v.x);
 	}
 
 	
 	//Dot product
-	float Vector3::operator*(const Vector3& v)const {
-		return this->x*v.x+this->y*v.y+this->z*v.z;
+	float* Vector3::operator*(const Vector3& v)const {
+		float* returnable = new float[1];
+		returnable[1] = this->x*v.x+this->y*v.y+this->z*v.z;
+		
+		return returnable;
 	}
 	
 	//Scalar
-	Vector3 Vector3::operator*(const float s)const {
-		return Vector3(this->x*s, this->y*s, this->z*s);
+	Vector3* Vector3::operator*(const float s)const {
+		return new Vector3(this->x*s, this->y*s, this->z*s);
 	}
 	
-	Vector3 Vector3::operator/(const float s)const {
-		return Vector3(this->x/s, this->y/s, this->z/s);
+	Vector3* Vector3::operator/(const float s)const {
+		return new Vector3(this->x/s, this->y/s, this->z/s);
 	}
 	
 	//The really stupid idea
@@ -196,10 +199,225 @@ namespace ttmathengine {
 			matDIndex++;
 		}
 	}
+	
+	Matrix::~Matrix() {
+		delete [] matrix_data;
+	}
+	
+	//Comparators
+	bool Matrix::operator==(const Matrix& other_m) {
+		float* other_matrix = other_m.GetMatrixData;
+		
+		for(int i = 0; i < 9; i++) {
+			if(this->matrix_data[i] != other_matrix[i]) {
+				return false;
+			}
+		}
+		
+		delete [] other_matrix;
+		
+		return true;
+	}
+
+	bool Matrix::operator!=(const Matrix& other_m) {
+		float* other_matrix = other_m.GetMatrixData;
+		
+		for(int i = 0; i < 9; i++) {
+			if(this->matrix_data[i] != other_matrix[i]) {
+				return true;
+			}
+		}
+		
+		delete [] other_matrix;
+		
+		return false;
+	}
+	
+	//Arithmatic
+	Matrix* Matrix::operator+(const Matrix& other_m)const {
+		float* matrix_data_new = new float[9];
+		float* other_matrix_data = other_m.GetMatrixData;
+		
+		for(int i = 0; i < 9; i++) {
+			matrix_data_new[i] = other_matrix_data[i] + this->matrix_data[i];
+		}
+		
+		Matrix* returnable = new Matrix(matrix_data_new);
+		
+		delete [] other_matrix_data;
+		delete [] matrix_data_new;
+		
+		return returnable;
+	}
+	
+	Matrix* Matrix::operator-(const Matrix& other_m)const {
+		float* matrix_data_new = new float[9];
+		float* other_matrix_data = other_m.GetMatrixData;
+		
+		for(int i = 0; i < 9; i++) {
+			matrix_data_new[i] = other_matrix_data[i] - this->matrix_data[i];
+		}
+		
+		Matrix* returnable = new Matrix(matrix_data_new);
+		
+		delete [] other_matrix_data;
+		delete [] matrix_data_new;
+		
+		return returnable;
+	}
+	
+	Matrix* Matrix::operator*(const Matrix& other_m)const {
+		float* matrix_data_new = new float[9];
+		float* other_matrix_data = other_m.GetMatrixData;
+		
+		float rows[3][3] = {
+			{this->matrix_data[0], this->matrix_data[1], this->matrix_data[2]},
+			{this->matrix_data[3], this->matrix_data[4], this->matrix_data[5]},
+			{this->matrix_data[6], this->matrix_data[7], this->matrix_data[8]}
+		};
+
+		float cols[3][3] = {
+			{this->matrix_data[0], this->matrix_data[3], this->matrix_data[6]},
+			{this->matrix_data[1], this->matrix_data[4], this->matrix_data[7]},
+			{this->matrix_data[2], this->matrix_data[5], this->matrix_data[8]},
+		};
+		
+		for(int i = 0; i < 3; i++) {
+			for(int j = 0; j < 3; j++) {
+				matrix_data_new[(3*i) + j] = rows[i][0] * cols[j][0] + rows[i][1] * cols[j][1] + rows[i][2] * cols[j][2];
+			}
+		}
+		
+		Matrix* returnable = new Matrix(matrix_data_new);
+		
+		delete [] other_matrix_data;
+		delete [] matrix_data_new;
+		
+		return returnable;
+	}
+	
+	Matrix* Matrix::operator/(const Matrix& other_m)const {
+		float matrix_data_new[9] = {0.0};
+		float* other_matrix_data = other_m.GetMatrixData;
+		
+		float rows[3][3] = {
+			{this->matrix_data[0], this->matrix_data[1], this->matrix_data[2]},
+			{this->matrix_data[3], this->matrix_data[4], this->matrix_data[5]},
+			{this->matrix_data[6], this->matrix_data[7], this->matrix_data[8]}
+		};
+
+		float cols[3][3] = {
+			{this->matrix_data[0], this->matrix_data[3], this->matrix_data[6]},
+			{this->matrix_data[1], this->matrix_data[4], this->matrix_data[7]},
+			{this->matrix_data[2], this->matrix_data[5], this->matrix_data[8]},
+		};
+		
+		for(int i = 0; i < 3; i++) {
+			for(int j = 0; j < 3; j++) {
+				matrix_data_new[(3 * i) + j] = rows[i][0] * cols[j][0] + rows[i][1] * cols[j][1] + rows[i][2] * cols[j][2];
+			}
+		}
+		
+		Matrix* returnable = new Matrix(matrix_data_new);
+		
+		delete[] matrix_data_new;
+
+		return returnable;
+	}
+	
+	Matrix* Matrix::operator*(const float scalar)const {
+		float* matrix_data_new = new float[9];
+		
+		for(int i = 0; i < 9; i++) {
+			matrix_data_new[i] = scalar  * this->matrix_data[i];
+		}
+		
+		Matrix* returnable = new Matrix(matrix_data_new);
+		
+		delete [] matrix_data_new;
+		
+		return returnable;
+	}
+	
+	Matrix* Matrix::operator/(const float scalar)const {
+		float* matrix_data_new = new float[9];
+		
+		for(int i = 0; i < 9; i++) {
+			matrix_data_new[i] = scalar  / this->matrix_data[i];
+		}
+		
+		Matrix* returnable = new Matrix(matrix_data_new);
+		
+		delete [] matrix_data_new;
+		
+		return returnable;
+	}
+	
+	//Alter and assign
+	
 
 	//Matrix functions
 	float* Matrix::GetMatrixData() {
 		return matrix_data;
+	}
+
+	Matrix* Matrix::Inverse() {
+		float* matData = this->matrix_data;
+		float determinantA = matData[0] * (matData[4] * matData[8] - matData[5] * matData[7]);
+		float determinantB = matData[1] * (matData[3] * matData[8] - matData[5] * matData[6]);
+		float determinantC = matData[2] * (matData[3] * matData[7] - matData[4] * matData[6]);
+
+		float determinant = determinantA - determinantB + determinantC;
+		if (determinant == 0) {
+			return nullptr;
+		}
+
+		Matrix* minor = this->MinorMatrix();
+		minor->Cofactor();
+		Matrix* minorAdjugate = minor->Adjugate();
+
+		delete minor;
+
+		*minor *= (1 / determinant);
+
+		return minor;
+	}
+
+	Matrix* Matrix::MinorMatrix() {
+		float matData[9] = {
+			//row 0
+			this->matrix_data[4] * this->matrix_data[8] - this->matrix_data[5] * this->matrix_data[7],
+			this->matrix_data[3] * this->matrix_data[8] - this->matrix_data[5] * this->matrix_data[6],
+			this->matrix_data[3] * this->matrix_data[7] - this->matrix_data[4] * this->matrix_data[6],
+			//row 1
+			this->matrix_data[1] * this->matrix_data[8] - this->matrix_data[2] * this->matrix_data[7],
+			this->matrix_data[0] * this->matrix_data[8] - this->matrix_data[2] * this->matrix_data[6],
+			this->matrix_data[0] * this->matrix_data[7] - this->matrix_data[1] * this->matrix_data[6],
+			//row 2
+			this->matrix_data[1] * this->matrix_data[5] - this->matrix_data[2] * this->matrix_data[4],
+			this->matrix_data[0] * this->matrix_data[5] - this->matrix_data[2] * this->matrix_data[3],
+			this->matrix_data[0] * this->matrix_data[4] - this->matrix_data[1] * this->matrix_data[3]
+		};
+
+		return new Matrix(matData);
+	}
+
+	Matrix* Matrix::Adjugate() {
+		float matData[9] = {
+			this->matrix_data[0], this->matrix_data[3], this->matrix_data[6],
+			this->matrix_data[1], this->matrix_data[4], this->matrix_data[7],
+			this->matrix_data[2], this->matrix_data[5], this->matrix_data[8]
+		};
+
+		return new Matrix(matData);
+	}
+
+	void Matrix::Cofactor() {
+		for (int i = 0; i < sizeof(this->matrix_data); i++) {
+			if (i % 2 != 0) {
+				this->matrix_data[i] = -this->matrix_data[i];
+			}
+		}
 	}
 
 	//Display functions

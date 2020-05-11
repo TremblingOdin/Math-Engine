@@ -66,6 +66,16 @@ void vector_test() {
 	vector1->normalize();
 	assert(vecNormal == *vector1);
 	std::cout << "vector1's normal evaluated to: " << vector1->ToString() << std::endl;
+	
+	std::cout << "Deleting Vectors" << std::endl;
+	
+	delete zero;
+	delete vector1;
+	delete vector2;
+	delete doubltVector2;
+	delete vector3;
+	delete crossVector;
+	
 	std::cout << "****************End Vector Testing****************\n";
 }
 
@@ -73,10 +83,10 @@ void matrix_test() {
 	std::cout << "****************Begin Matrix Testing****************\n";
 	std::cout << "Creating Matricies\n";
 
-	float* dataArr1 = new float[9];
-	float* miniArr1 = new float[3];
-	float* miniArr2 = new float[3];
-	float* miniArr3 = new float[3];
+	float dataArr1[9] = {0.0};
+	float miniArr1[3] = {0.0};
+	float miniArr2[3] = {0.0};
+	float miniArr3[3] = {0.0};
 	float** dataArr2D = new float*[3];
 
 	for (int i = 0; i < 3; i++) {
@@ -96,7 +106,9 @@ void matrix_test() {
 	Matrix *m1 = new Matrix();
 	m1->Show();
 	std::cout << m1->ToString() << std::endl;
-	Matrix *m2 = new Matrix(1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+	Matrix *m2 = new Matrix(1.0f, 1.0f, 1.0f,
+							0.0f, 0.0f, 0.0f, 
+							0.0f, 0.0f, 0.0f);
 	m2->Show();
 	Matrix *neo = new Matrix(dataArr1);
 	neo->Show();
@@ -109,4 +121,6 @@ void matrix_test() {
 	for (int i = 0; i < 9; i++) {
 		assert(dataArr1[i] == dataArr2[i]);
 	}
+	
+	(reloaded * revolution)->Show();
 }
