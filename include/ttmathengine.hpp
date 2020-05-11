@@ -47,23 +47,23 @@ namespace ttmathengine {
 			void Vector3::operator/=(const float);
 			
 			//Algebraic
-			Vector3* Vector3::operator+(const Vector3&)const;
-			Vector3* Vector3::operator-(const Vector3&)const;
+			Vector3 Vector3::operator+(const Vector3&)const;
+			Vector3 Vector3::operator-(const Vector3&)const;
 			
 			//Scalar
-			Vector3* Vector3::operator*(const float)const;
-			Vector3* Vector3::operator/(const float)const;
+			Vector3 Vector3::operator*(const float)const;
+			Vector3 Vector3::operator/(const float)const;
 			
 			//Dot product
-			float* Vector3::operator*(const Vector3&) const;
+			float Vector3::operator*(const Vector3&) const;
 			
 			//Cross product
-			Vector3* Vector3::operator%(const Vector3&)const;
+			Vector3 Vector3::operator%(const Vector3&)const;
 			
 			//This might be really stupid, but it might be really convenient
 			//Override the bitwise shifts to just be "move left" and "move right"
-			Vector3* Vector3::operator<<(const Vector3&)const;
-			Vector3* Vector3::operator>>(const Vector3&)const;
+			Vector3 Vector3::operator<<(const Vector3&)const;
+			Vector3 Vector3::operator>>(const Vector3&)const;
 			
 			//From here is non-operator functions
 			float Vector3::dot(Vector3);
@@ -73,11 +73,29 @@ namespace ttmathengine {
 			
 			void Vector3::normalize();
 			
-			char* Vector3::ToString();
+			std::string Vector3::ToString();
 	};
 
 //TODO: Matricies
 	class Matrix {
+		private:
+			std::vector<std::vector<float>> matrix_data;
+
+		public:
+			int x;
+			int y;
+
+			Matrix::Matrix(int, int);
+			Matrix::Matrix(int, int, std::vector<std::vector<float>>);
+
+			std::vector<std::vector<float>> Matrix::GetMatrixData();
+
+			//Display functions
+			void Matrix::Show();
+			std::string Matrix::ToString();
+	};
+
+	/*class Matrix {
 		private:
 			float matrix_data[9] = { 0.0 };
 
@@ -100,13 +118,13 @@ namespace ttmathengine {
 			bool Matrix::operator!=(const Matrix&);
 			
 			//Arithmatic
-			Matrix* Matrix::operator+(const Matrix&)const;
-			Matrix* Matrix::operator-(const Matrix&)const;
-			Matrix* Matrix::operator*(const Matrix&)const;
-			Matrix* Matrix::operator/(const Matrix&)const;
+			Matrix Matrix::operator+(const Matrix&)const;
+			Matrix Matrix::operator-(const Matrix&)const;
+			Matrix Matrix::operator*(const Matrix&)const;
+			Matrix Matrix::operator/(const Matrix&)const;
 			
-			Matrix* Matrix::operator*(const float)const;
-			Matrix* Matrix::operator/(const float)const;
+			Matrix Matrix::operator*(const float)const;
+			Matrix Matrix::operator/(const float)const;
 			
 			//Add and assign
 			void Matrix::operator+=(const Matrix&)const;
@@ -117,18 +135,8 @@ namespace ttmathengine {
 			void Matrix::operator*=(const float)const;
 			void Matrix::operator/=(const float)const;
 			
-			float* Matrix::GetMatrixData();
 
-			Matrix* Matrix::Inverse();
-			Matrix* Matrix::MinorMatrix();
-			Matrix* Matrix::Adjugate();
-
-			void Matrix::Cofactor();
-
-			//Two display functions
-			void Matrix::Show();
-			char* Matrix::ToString();
-	};
+	};*/
 
 //TODO: Quaternions
 	class Quaternion {
@@ -152,6 +160,13 @@ namespace ttmathengine {
 
 //TODO: General Functions
 	Vector3 VectorNormal(Vector3);
+
+	Matrix Inverse(Matrix);
+	Matrix MinorMatrix(Matrix);
+	Matrix Cofactor(Matrix);
+	Matrix Adjugate(Matrix);
+
+	float Determinant(std::vector<std::vector<float>>, int, int);
 }
 
 #endif
