@@ -135,7 +135,8 @@ namespace ttmathengine {
 				+ std::to_string(this->y) + ", "
 				+ std::to_string(this->z) + ")";
 
-		return charhelper::unconstchar(charArr.c_str());
+		std::string returnable(charArr.c_str());
+		return returnable;
 	}
 	
 	//Matrix functions
